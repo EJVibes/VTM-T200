@@ -872,7 +872,7 @@ button {
 }
 
 .terminus:hover {
-    background-color: #0b2846;
+    background-color: #0C2A47;
 }
 
 .stop1 {
@@ -880,6 +880,6 @@ button {
 }
 
 .stop1:hover {
-    background-color: #1f4b7a;
+    background-color: #0C2A47;
 }
 </style>

@@ -51,7 +51,7 @@
         <br><br>
         <div class="full">
             <input type="text" v-model="customTTS" name="customTTS" id="customTTS" placeholder="Custom Announcement"
-                style="width: 100%; height: 7.5vh; background: #004ab9; border: 0; font-size: 125%; color: white; text-align: center;">
+                style="width: 100%; height: 7.5vh; background: #00009C; border: 0; font-size: 125%; color: white; text-align: center;">
         </div>
 
         <div class="inline">
@@ -125,7 +125,7 @@ body {
     box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
     display: none;
     height: 5vh;
-    background: #004ab9;
+    background: #00009C;
     bottom: 20vh;
     position: fixed;
     left: 10px;

@@ -136,12 +136,12 @@ export default {
     height: 7.5vh;
     width: 25vw;
     border: 0;
-    background: #004ab9;
+    background: #00009C;
     color: white;
     font-size: 150%;
 }
 
 .buttonLogOut:hover {
-    background: #003c97;
+    background: #000082;
 }
 </style>

@@ -92,7 +92,7 @@ export default {
     bottom: 10vh;
     width: 100%;
     height: 25px;
-    background-color: #004ab9;
+    background-color: #00009C;
     animation: loading 1s linear infinite;
     margin-bottom: 1rem;
 }

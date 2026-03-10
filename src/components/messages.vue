@@ -43,7 +43,7 @@
     </div>
     <div class="buttons">
         <button class="optionBT" @click="navigateToOptions">BACK</button>
-        <button class="issue" style="background-color: #004ab9; color: white; width: calc(50vw - 5px);" @click="openMessage('open')">NEW</button>
+        <button class="issue" style="background-color: #00009C; color: white; width: calc(50vw - 5px);" @click="openMessage('open')">NEW</button>
         <button class="startBT" style="width: 25vw;" @click="fetchConversations(username)">REFRESH</button>
     </div>
 </template>
@@ -181,7 +181,7 @@ export default {
 
 <style scoped>
 .sendMessage {
-    background: #004ab9;
+    background: #00009C;
     color: #ffffff;
     font-size: 2.5vh;  
     width: calc(100% - 8px);
@@ -324,6 +324,6 @@ p {
 }
 
 .startBT:hover {
-    background-color: #0056b3;
+    background-color: #000082;
 }
 </style>

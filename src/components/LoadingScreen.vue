@@ -70,7 +70,7 @@ export default {
   left: 50%;
   transform: translateX(-50%);
   font-size: 1.5em;
-  color: #006aff;
+  color: #00009C;
   font-weight: bold;
 }
 </style>

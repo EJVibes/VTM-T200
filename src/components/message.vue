@@ -5,7 +5,7 @@
         </div><br><br><br>
         <div class="buttons">
             <button class="optionBT" @click="navigateToOptions">BACK</button>
-            <button class="issue" style="background-color: #004ab9; color: white; width: calc(50vw - 5px);"
+            <button class="issue" style="background-color: #00009C; color: white; width: calc(50vw - 5px);"
                 @click="openMessage('open')">NEW</button>
         </div>
 
@@ -193,7 +193,7 @@ export default {
 
 <style scoped>
 .sendMessage {
-    background: #004ab9;
+    background: #00009C;
     color: #ffffff;
     font-size: 2.5vh;
     width: calc(100% - 8px);
