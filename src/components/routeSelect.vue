@@ -72,6 +72,7 @@ export default {
             username: '',
             routes: [],
             filteredRoutes: [],
+            routeStops: [],
             stopArray: 'test',
             stop2Array: '',
             selectedEndDestination: '', // Variable for storing selected end destination
@@ -145,6 +146,11 @@ export default {
                     : localStorage.getItem('selectedRouteStop2');
             }
 
+            // Guard against literal 'undefined' and empty values before using
+            if (!currentStop || currentStop === 'undefined') {
+                currentStop = '';
+            }
+
             // Use first line of stop if multi-line
             const activeStop = currentStop ? currentStop.split('\r\n')[0] : '';
             localStorage.setItem('activeRouteStop', activeStop);
@@ -215,9 +221,30 @@ export default {
             this.$router.push({ path: '/loadTicketData' });
             localStorage.setItem('dontLog', true);
         },
-        selectRoute(Route) {
+        async selectRoute(Route) {
+            console.log('Selected route ID:', Route);
             const dead = false;
             this.dead = dead;
+            let stopSequenceForward = '';
+            let stopSequenceReverse = '';
+
+            // Fetch stops for the selected route and store them (await so storage happens before navigation)
+            try {
+                const response = await axios.get(`https://www.mybustimes.cc/api/routes/${Route.id}/stops/`);
+                const stops = response.data?.stops || [];
+                console.log('Route stops:', stops);
+                this.routeStops = stops;
+                const stopNames = stops
+                    .map((item) => item?.stop) 
+                    .filter(Boolean);
+                stopSequenceForward = stopNames.join('\r\n');
+                stopSequenceReverse = [...stopNames].reverse().join('\r\n');
+                localStorage.setItem('selectedRouteStops', JSON.stringify(stops));
+            } catch (error) {
+                console.error('Error fetching route stops:', error);
+                // ensure key exists even on failure
+                localStorage.setItem('selectedRouteStops', JSON.stringify([]));
+            }
             // Split the stop and destination values into arrays
             const stop1Array = Route.inbound_destination;
             const stop2Array = Route.outbound_destination;
@@ -231,16 +258,19 @@ export default {
 
             this.endDestinations = [stop1Array, stop2Array, ...destinationArray, ...destination2Array];
 
-            // Save the selected route information in localStorage
-            localStorage.setItem('selectedRoute', Route.route_id);
-            localStorage.setItem('selectedRouteStart', Route.inbound_destination);
-            localStorage.setItem('selectedRouteEnd', Route.outbound_destination);
-            localStorage.setItem('selectedRouteStop1', Route.stop);
-            localStorage.setItem('selectedRouteStop2', Route.stop2);
-            localStorage.setItem('selectedRouteRouteNum', Route.route_num);
-            localStorage.setItem('selectedRouteDest1', Route.destination);
-            localStorage.setItem('selectedRouteDest2', Route.destination2);
-            localStorage.setItem('selectedRouteName', Route.route_name);
+            // Save the selected route information in localStorage (sanitize undefined/null)
+            console.log('Selected route ID:', Route.id);
+            localStorage.setItem('selectedRoute', Route.id);
+            localStorage.setItem('selectedRouteStart', Route.inbound_destination || '');
+            localStorage.setItem('selectedRouteEnd', Route.outbound_destination || '');
+            localStorage.setItem('selectedRouteStop1', stopSequenceForward || Route.stop || '');
+            localStorage.setItem('selectedRouteStop2', stopSequenceReverse || Route.stop2 || '');
+            localStorage.setItem('selectedRouteRouteNum', Route.route_num || '');
+            localStorage.setItem('selectedRouteDest1', Route.destination || '');
+            localStorage.setItem('selectedRouteDest2', Route.destination2 || '');
+            localStorage.setItem('selectedRouteName', Route.route_name || '');
+            console.log('Saved selectedRouteStop1:', localStorage.getItem('selectedRouteStop1'));
+            console.log('Saved selectedRouteStop2:', localStorage.getItem('selectedRouteStop2'));
 
             // Show the popup
             const popup = document.querySelector('.popup');
