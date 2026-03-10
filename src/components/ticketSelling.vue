@@ -83,7 +83,7 @@ import ticketAccepted from '@/assets/Audio/Ticket accepted.wav';
 export default {
     data() {
         return {
-            colours: ["#ff5453", "#ffdc53", "#2fdb42"],
+            colours: ["#D03D3A", "#FFB210", "#247B05"],
             paxSeated: parseInt(localStorage.getItem("paxSeated")) || 0,
             paxStanding: parseInt(localStorage.getItem("paxStanding")) || 0,
             paxTotal: parseInt(localStorage.getItem("paxTotal")) || 0,
@@ -624,7 +624,7 @@ button {
 }
 
 .Zones .zone {
-    background-color: #004ab9;
+    background-color: #00009C;
     color: white;
     display: inline-block;
     padding: 5px;
@@ -662,7 +662,7 @@ button {
 }
 
 .Zones span {
-    background-color: #004ab9;
+    background-color: #00009C;
     color: white;
     display: inline-block;
     padding: 5px;
@@ -676,7 +676,7 @@ button {
 }
 
 .swipe-container {
-    background: #004ab9;
+    background: #00009C;
     scrollbar-width: none;
     -ms-overflow-style: none;
     display: flex;
@@ -868,7 +868,7 @@ button {
 }
 
 .terminus {
-    background-color: #103963;
+    background-color: #103A63;
 }
 
 .terminus:hover {
@@ -876,7 +876,7 @@ button {
 }
 
 .stop1 {
-    background-color: #2965a5;
+    background-color: #2965A5;
 }
 
 .stop1:hover {
