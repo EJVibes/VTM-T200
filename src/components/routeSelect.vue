@@ -13,8 +13,8 @@
             <button style="width: 33%; border-left: 5px white solid;" @click="selectDead()">Dead Run</button>
         </div>
         <div v-for="Route in filteredRoutes" :key="Route.id" class="option">
-            <button @click="selectRoute(Route)">{{ Route.route_num }} | {{ Route.start_destination }} | {{
-                Route.end_destination }}</button>
+            <button @click="selectRoute(Route)">{{ Route.route_num }} | {{ Route.inbound_destination }} | {{
+                Route.outbound_destination }}</button>
         </div>
     </div>
     <div id="fade"
@@ -114,99 +114,71 @@ export default {
 
     methods: {
         submitTrip() {
+            const session_key = localStorage.getItem('session_key');
             localStorage.setItem('currentIndexStop', 1);
-            const dontLog = localStorage.getItem('dontLog');
+            const dontLog = localStorage.getItem('dontLog') === 'true'; // ensure boolean
 
-            console.log(this.dead);
-            if (dontLog === true) {
+            console.log('Dead status:', this.dead);
+
+            if (dontLog) {
                 this.$router.push({ path: `/loadTicketData` });
-            } else if (this.dead) {
-                console.log('not ah' + this.dead);
-                const currentDate = new Date();
-                const currentDateTime = currentDate.toISOString();
-                const vehicleId = localStorage.getItem('selectedVehicle');
-                const currentStop = 'dead';
+                return;
+            }
 
-                const data = {
-                    trip_date_time: `${currentDateTime}`,
-                    route_number: 'dead',
-                    end_destination: '',
-                    vehicle_id: vehicleId,
-                    route_id: null,
-                    InBound: '',
-                    current_stop: currentStop
-                };
+            const currentDate = new Date();
+            const vehicleId = localStorage.getItem('selectedVehicle');
+            let routeId = localStorage.getItem('selectedRoute');
+            let routeNumber = localStorage.getItem('selectedRouteRouteNum');
+            let endDestination = localStorage.getItem('selectedEndDestination');
+            let startTime = localStorage.getItem('startTime') || '';
+            const isInbound = JSON.parse(localStorage.getItem('INBOUND') || 'false');
 
-                console.log(data);
-                axios.post('https://api.mybustimes.cc/api/trip/', data)
-                    .then(response => {
-                        console.log('Trip submitted successfully:', response.data);
-                        localStorage.setItem('TripID', response.data.trip_id);
-                        // Optionally, navigate to another page or show a success message
-                        this.$router.push({ path: `/loadTicketData` });
-                    })
-                    .catch(error => {
-                        console.error('Error submitting trip:', error);
-                    });
-            } else {
-                console.log('AHHHHHHHH' + this.dead);
+            // Normalize routeId and vehicleId to integers or null
+            routeId = routeId && routeId !== 'undefined' ? parseInt(routeId) : null;
+            const vehicleIdNum = vehicleId && vehicleId !== 'undefined' ? parseInt(vehicleId) : null;
 
-                const currentDate = new Date();
-                const currentDateTime = currentDate.toISOString().split('T')[0]; // Convert to ISO string format
-                const startTime = localStorage.getItem('startTime');
-                const routeNumber = localStorage.getItem('selectedRouteRouteNum');
-                const endDestination = localStorage.getItem('selectedEndDestination');
-                const vehicleId = localStorage.getItem('selectedVehicle');
-                const routeId = localStorage.getItem('selectedRoute');
-                const dontLog = localStorage.getItem('dontLog');
-                const isInbound = JSON.parse(localStorage.getItem('INBOUND')); // Assuming true/false value
-
-                const currentStop = this.dead ? 'dead' : isInbound
+            // Determine current stop
+            let currentStop = 'dead';
+            if (!this.dead) {
+                currentStop = isInbound
                     ? localStorage.getItem('selectedRouteStop1')
                     : localStorage.getItem('selectedRouteStop2');
- 
-                // Split the current stop into an array using \r\n as the separator
-                let stopArray = currentStop.split('\r\n');
-
-                // Set the last item of the array as the active one
-                const activeStop = stopArray[0];
-
-                // Optionally, you can store this active stop back into localStorage if needed
-                localStorage.setItem('activeRouteStop', activeStop);
-
-                // Output or use the active stop as needed
-                console.log(activeStop);
-
-
-                // Prepare the data for the POST request
-                const data = {
-                    trip_date_time: `${currentDateTime} ${startTime}`,
-                    route_number: routeNumber,
-                    end_destination: endDestination,
-                    vehicle_id: vehicleId,
-                    route_id: routeId,
-                    InBound: isInbound,
-                    current_stop: activeStop
-                };
-
-                console.log(data);
-
-                // Make POST request using axios
-                if (dontLog !== 'true') {
-                    axios.post('https://api.mybustimes.cc/api/trip/', data)
-                        .then(response => {
-                            console.log('Trip submitted successfully:', response.data);
-                            localStorage.setItem('TripID', response.data.trip_id);
-                            // Optionally, navigate to another page or show a success message
-                            this.$router.push({ path: `/loadTicketData` });
-                        })
-                        .catch(error => {
-                            console.error('Error submitting trip:', error);
-                        });
-                } else {
-                    this.$router.push({ path: `/loadTicketData` });
-                }
             }
+
+            // Use first line of stop if multi-line
+            const activeStop = currentStop ? currentStop.split('\r\n')[0] : '';
+            localStorage.setItem('activeRouteStop', activeStop);
+
+            // Prepare trip date-time
+            const tripDateTime = this.dead
+                ? currentDate.toISOString()
+                : `${currentDate.toISOString().split('T')[0]} ${startTime}`;
+
+            const data = {
+                session_key,
+                trip_date_time: tripDateTime,
+                route_number: routeNumber || 'dead',
+                outbound_destination: endDestination || '',
+                vehicle_id: vehicleIdNum,
+                route_id: routeId,
+                InBound: isInbound,
+                current_stop: activeStop
+            };
+
+            console.log('Trip data to submit:', data);
+
+            // Submit trip via axios
+            axios.post('https://www.mybustimes.cc/api/trips/create/', data)
+                .then(response => {
+                    console.log('Trip submitted successfully:', response.data);
+                    if (response.data.trip_id) {
+                        localStorage.setItem('TripID', response.data.trip_id);
+                    }
+                    this.$router.push({ path: `/loadTicketData` });
+                })
+                .catch(error => {
+                    console.error('Error submitting trip:', error);
+                });
         },
         selectTicket() {
             localStorage.setItem('dontLog', true);
@@ -227,10 +199,13 @@ export default {
             location.reload();
         },
         filterRoutes(companyCode) {
+            console.log('Filtering routes for company:', companyCode);
             if (companyCode) {
-                this.filteredRoutes = this.Routes.filter(
-                    (Route) => Route.route_operator === companyCode
-                );
+                this.filteredRoutes = this.Routes.filter((route) => {
+                    return route.route_operators_data?.some(
+                        (op) => op.operator_code === companyCode
+                    );
+                });
             } else {
                 console.error('No selected company found in localStorage');
                 this.filteredRoutes = [];
@@ -244,8 +219,8 @@ export default {
             const dead = false;
             this.dead = dead;
             // Split the stop and destination values into arrays
-            const stop1Array = Route.start_destination;
-            const stop2Array = Route.end_destination;
+            const stop1Array = Route.inbound_destination;
+            const stop2Array = Route.outbound_destination;
             const destination = Route.destination;
             const destination2 = Route.destination2;
             const destinationArray = destination === 'null' || !destination ? [] : destination.split(' - ').filter(item => item !== 'null');
@@ -258,8 +233,8 @@ export default {
 
             // Save the selected route information in localStorage
             localStorage.setItem('selectedRoute', Route.route_id);
-            localStorage.setItem('selectedRouteStart', Route.start_destination);
-            localStorage.setItem('selectedRouteEnd', Route.end_destination);
+            localStorage.setItem('selectedRouteStart', Route.inbound_destination);
+            localStorage.setItem('selectedRouteEnd', Route.outbound_destination);
             localStorage.setItem('selectedRouteStop1', Route.stop);
             localStorage.setItem('selectedRouteStop2', Route.stop2);
             localStorage.setItem('selectedRouteRouteNum', Route.route_num);

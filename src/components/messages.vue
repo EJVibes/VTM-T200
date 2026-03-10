@@ -93,8 +93,8 @@ export default {
             try {
                 // Fetch conversations where 'to' is the username and where 'From' is the username
                 const responses = await Promise.all([
-                    axios.get('https://api.mybustimes.cc/api/conversation/', { params: { format: 'json', to: this.username } }),
-                    axios.get('https://api.mybustimes.cc/api/conversation/', { params: { format: 'json', From: this.username } }),
+                    axios.get('https://https://www.mybustimes.cc/api/conversation/', { params: { format: 'json', to: this.username } }),
+                    axios.get('https://https://www.mybustimes.cc/api/conversation/', { params: { format: 'json', From: this.username } }),
                 ]);
 
                 // Store data in localStorage for 'to' and 'from' conversations
@@ -135,7 +135,7 @@ export default {
 
             try {
                 // Create a new conversation
-                const conversationResponse = await axios.post("https://api.mybustimes.cc/api/conversation/", conversationData, {
+                const conversationResponse = await axios.post("https://https://www.mybustimes.cc/api/conversation/", conversationData, {
                     headers: {
                         "Content-Type": "application/json"
                     }
@@ -150,7 +150,7 @@ export default {
                     };
 
                     // Send the message for the created conversation
-                    const messageResponse = await axios.post("https://api.mybustimes.cc/api/messages/", messageData, {
+                    const messageResponse = await axios.post("https://https://www.mybustimes.cc/api/messages/", messageData, {
                         headers: {
                             "Content-Type": "application/json"
                         }

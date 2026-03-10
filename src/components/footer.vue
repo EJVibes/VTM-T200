@@ -93,7 +93,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+//import axios from 'axios';
 
 export default {
   name: 'FooterComponent',
@@ -152,34 +152,34 @@ export default {
   },
   methods: {
     async checkUnreadMessages() {
-      console.log(this.username);
-      try {
-          if (this.username !== null) {
-            // Make an API call to fetch unread messages
-            const response = await axios.get(
-              `https://api.mybustimes.cc/api/messages?to_user=${this.username}`,
-              { params: { format: 'json' } }
-            );
-    
-            const unreadMessages = response.data.results.filter(
-              (message) => message.to_user === this.username && !message.read
-            );
-    
-            // Update unread message count
-            this.unreadMessagesCount = unreadMessages.length;
-            console.log(unreadMessages.length);
-    
-            // If the count has increased, play the sound
-            if (this.unreadMessagesCount > this.previousUnreadMessagesCount) {
-              this.playSoundEffect();
-            }
-    
-            // Store the current count for future comparison
-            this.previousUnreadMessagesCount = this.unreadMessagesCount;
-          }
-      } catch (error) {
-        console.error('Error fetching unread messages:', error);
-      }
+      //console.log(this.username);
+      //try {
+      //    if (this.username !== null) {
+      //      // Make an API call to fetch unread messages
+      //      const response = await axios.get(
+      //        `https://https://www.mybustimes.cc/api/messages?to_user=${this.username}`,
+      //        { params: { format: 'json' } }
+      //      );
+    //
+      //      const unreadMessages = response.data.results.filter(
+      //        (message) => message.to_user === this.username && !message.read
+      //      );
+    //
+      //      // Update unread message count
+      //      this.unreadMessagesCount = unreadMessages.length;
+      //      console.log(unreadMessages.length);
+    //
+      //      // If the count has increased, play the sound
+      //      if (this.unreadMessagesCount > this.previousUnreadMessagesCount) {
+      //        this.playSoundEffect();
+      //      }
+    //
+      //      // Store the current count for future comparison
+      //      this.previousUnreadMessagesCount = this.unreadMessagesCount;
+      //    }
+      //} catch (error) {
+      //  console.error('Error fetching unread messages:', error);
+      //}
     },
 
     // Function to play sound effect if not muted

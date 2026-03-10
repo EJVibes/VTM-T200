@@ -58,7 +58,7 @@ export default {
         filterVehicles(companyCode) {
             if (companyCode) {
                 this.filteredVehicles = this.vehicles.filter(
-                    (vehicle) => vehicle.operator_code === companyCode && vehicle.in_service === true
+                    (vehicle) => vehicle.operator?.operator_code === companyCode && vehicle.in_service === true
                 );
             } else {
                 console.error('No selected company found in localStorage');

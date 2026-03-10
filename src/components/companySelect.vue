@@ -8,7 +8,7 @@
     </div>
     <div class="options">
         <div v-for="company in sortedCompanies" :key="company.id" class="option">
-            <button @click="selectCompany(company.operator_name, company.operator_code)">
+            <button @click="selectCompany(company.operator_name, company.operator_code, company.id)">
                 {{ company.operator_name }} | {{ company.operator_code }}
             </button>
         </div>
@@ -45,10 +45,11 @@ export default {
         this.username = localStorage.getItem('username') || 'Guest'; // Default to 'Guest' if no username is found
     },
     methods: {
-        selectCompany(companyName, companyCode) {
+        selectCompany(companyName, companyCode, id) {
             // Optionally, do something with the selected company (e.g., store it)
-            console.log(`Selected Company: ${companyName} | ${companyCode}`);
+            console.log(`Selected Company: ${companyName} | ${companyCode} | ${id}`);
             // Store the selected company in localStorage if needed
+            localStorage.setItem('selectedCompanyID', id)
             localStorage.setItem('selectedCompany', companyCode);
             this.$router.push({ path: `/vehicleSelect` });
         },

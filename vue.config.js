@@ -50,7 +50,9 @@ module.exports = defineConfig({
     allowedHosts: [
       'ticketer.mybustimes.cc', 
       'dev-ticketer.mybustimes.cc',
+      '0.0.0.0',
       'localhost',
+      '127.0.0.1',
       '192.168.1.150',
     ],
     client: {

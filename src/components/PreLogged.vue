@@ -59,7 +59,7 @@ export default {
 
             try {
                 const response = await axios.get(
-                    "https://api.mybustimes.cc/api/trip/",
+                    "https://https://www.mybustimes.cc/api/trip/",
                     {
                         params: {
                             vehicle_id: this.vehicleId, // Filter by vehicle ID
@@ -93,7 +93,7 @@ export default {
         },
         acceptTrip() {
             if (this.selectedTrip) {
-                fetch(`https://api.mybustimes.cc/api/routes/?route_id=${this.selectedTrip.route_id}`)
+                fetch(`https://https://www.mybustimes.cc/api/routes/?route_id=${this.selectedTrip.route_id}`)
                 .then(response => response.json())
                 .then(data => {
                     // Extract start and end destinations

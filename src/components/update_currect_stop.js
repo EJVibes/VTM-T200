@@ -6,7 +6,7 @@ export async function updateCurrentStop(tripId, updatedStop) {
         // Fetch the trip data first
 
         const response = await axios.get(
-            `https://api.mybustimes.cc/api/trip/`,
+            `https://https://www.mybustimes.cc/api/trip/`,
             {
                 params: {
                     trip_id: tripId,
@@ -31,7 +31,7 @@ export async function updateCurrentStop(tripId, updatedStop) {
 
         // Send the PUT request to update the current stop
         const updateResponse = await axios.put(
-            `https://api.mybustimes.cc/api/trip/${tripId}/`, // Assuming the URL structure
+            `https://https://www.mybustimes.cc/api/trip/${tripId}/`, // Assuming the URL structure
             updatedTripData, // Send the full data with the updated current_stop
             {
                 headers: {

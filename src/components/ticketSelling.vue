@@ -43,13 +43,13 @@
     <div class="tickets" v-if="filteredTickets.length > 0">
         <div class="ticket" v-for="ticket in currentPageTickets" :key="ticket.id"
             :style="{ backgroundColor: ticket.ticketer_colour }">
-            <p style="margin-top: 10px;">£{{ ticket.ticket_price.toFixed(2) }}</p>
+            <p style="margin-top: 10px;">£{{ ticket.ticket_price }}</p>
             <button @click="decreaseCount(ticket)">-</button>
             <div class="count">
                 <p>{{ ticket.count || 0 }}</p> <!-- Use ticket.count here -->
             </div>
             <button @click="increaseCount(ticket)">+</button>
-            <p>{{ ticket.ticketer_name || ticket.ticket_name }}</p>
+            <p>{{ ticket.name_on_ticketer || ticket.ticket_name }}</p>
         </div>
         <div class="ticket1">
 
@@ -112,6 +112,12 @@ export default {
         };
     },
     mounted() {
+        // user let routeId = localStorage.getItem('selectedRoute'); to get the route ID
+        // then use this API to get the stops
+        // https://www.mybustimes.cc/api/routes/76605/stops/
+        // then cry
+
+
         console.log(this.currentIndexStop),
             this.startInactivityTimer(true);
 
@@ -136,7 +142,7 @@ export default {
         });
 
         // Extract unique ticketer_cat values
-        const uniqueCategories = [...new Set(tickets.map(ticket => ticket.ticketer_cat))];
+        const uniqueCategories = [...new Set(tickets.map(ticket => ticket.ticket_category))];
 
         // Add unique ticketer_cat to zones
         this.zones = uniqueCategories;
@@ -400,7 +406,7 @@ export default {
 
             // Filter tickets by ticketer_cat
             this.filteredTickets = this.tickets
-                .filter(ticket => ticket.ticketer_cat === selectedZone)
+                .filter(ticket => ticket.ticket_category === selectedZone)
                 .sort((a, b) => {
                     // Move tickets with a ticket_price of 0 to the end
                     if (a.ticket_price === 0 || a.ticket_price === 0.0 || a.ticket_price === 0.00) {
@@ -468,6 +474,7 @@ export default {
         // Decrease the count of the ticket
         increaseCount(ticket) {
             this.filteredTickets.forEach(t => {
+                
                 if (t.id !== ticket.id) {
                     t.count = 0;
                 }
@@ -476,16 +483,16 @@ export default {
             if (targetTicket) {
                 targetTicket.count = (targetTicket.count || 0) + 1;  // Ensure count is a number
                 this.totalPrice = targetTicket.ticket_price * targetTicket.count;
-                this.totalPrice = this.totalPrice.toFixed(2)
+                //this.totalPrice = this.totalPrice
                 if (targetTicket.count > 1) {
-                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name + ' X' + targetTicket.count;
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price + ' ' + targetTicket.ticket_name + ' X' + targetTicket.count;
                 } else {
-                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price + ' ' + targetTicket.ticket_name;
                 }
                 document.getElementById('issue').style.zIndex = '3';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
-                document.getElementById('issue').textContent = '£' + this.totalPrice;
+                document.getElementById('issue').textContent = '£' + this.totalPrice.toFixed(2);
             }
         },
         decreaseCount(ticket) {
@@ -493,12 +500,12 @@ export default {
             if (targetTicket && targetTicket.count > 0) {
                 targetTicket.count = (targetTicket.count || 0) - 1;  // Ensure count is a number
                 if (targetTicket.count > 1) {
-                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name + ' X' + targetTicket.count;
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price + ' ' + targetTicket.ticketer_name + ' X' + targetTicket.count;
                 } else {
-                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price.toFixed(2) + ' ' + targetTicket.ticketer_name;
+                    document.getElementById('ticketName').textContent = '£' + targetTicket.ticket_price + ' ' + targetTicket.ticketer_name;
                 }
                 this.totalPrice = targetTicket.ticket_price * targetTicket.count;
-                this.totalPrice = this.totalPrice.toFixed(2)
+                //this.totalPrice = this.totalPrice
                 document.getElementById('issue').style.zIndex = '3';
                 document.getElementById('issue').style.backgroundColor = this.getBackgroundColour();
                 document.getElementById('issue').style.color = '#ffffff';
@@ -526,6 +533,7 @@ export default {
 
             // Loop through filtered tickets to find and handle the selected ticket
             this.filteredTickets.forEach(t => {
+                
                 if (t.count > 0) {
                     this.ticketName = t.ticket_name;
                     this.ticketPrice = t.ticket_price;
@@ -563,6 +571,7 @@ export default {
             // Reset ticket counts after processing
             this.filteredTickets.forEach(t => {
                 t.count = 0;
+                
             });
 
             // Update the passenger total in localStorage

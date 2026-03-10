@@ -42,7 +42,7 @@ export default {
         this.isLoading = true; // Start loading
 
         // Get the selected company from localStorage
-        const selectedCompany = localStorage.getItem("selectedCompany");
+        const selectedCompany = localStorage.getItem("selectedCompanyID");
 
         if (!selectedCompany) {
           console.error("No company selected in localStorage.");
@@ -50,12 +50,11 @@ export default {
           return;
         }
 
-        // Make the API call
         const response = await axios.get(
-          "https://api.mybustimes.cc/api/tickets/",
+          "https://www.mybustimes.cc/api/operator/ticket/",
           {
             params: {
-              operator_code: selectedCompany,
+              operator: selectedCompany,
             },
           }
         );

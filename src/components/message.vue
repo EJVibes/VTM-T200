@@ -87,14 +87,14 @@ export default {
 
                 if (conversationId) {
                     const response = await axios.get(
-                        `https://api.mybustimes.cc/api/messages/?conversation_id=${conversationId}&format=json`
+                        `https://https://www.mybustimes.cc/api/messages/?conversation_id=${conversationId}&format=json`
                     );
 
                     // Save the result in the messages array
                     this.messages = response.data.results;
 
                     const response1 = await axios.get(
-                        `https://api.mybustimes.cc/api/conversation/?conversation_id=${conversationId}&format=json`
+                        `https://https://www.mybustimes.cc/api/conversation/?conversation_id=${conversationId}&format=json`
                     );
                     this.conversationId = conversationId;
                     this.conversation = response1.data.results;
@@ -118,7 +118,7 @@ export default {
             try {
                 // Fetch the messages
                 const response = await axios.get(
-                    `https://api.mybustimes.cc/api/messages/?conversation_id=${this.conversationId}&to_user=${this.username}`,
+                    `https://https://www.mybustimes.cc/api/messages/?conversation_id=${this.conversationId}&to_user=${this.username}`,
                     { params: { format: 'json' } }
                 );
 
@@ -136,7 +136,7 @@ export default {
                 // Loop through the filtered messages and mark them as read
                 for (const message of messagesToMark) {
                     await axios.patch(
-                        `https://api.mybustimes.cc/api/messages/${message.message_id}/?conversation_id=${this.conversationId}&to_user=${this.username}`,
+                        `https://https://www.mybustimes.cc/api/messages/${message.message_id}/?conversation_id=${this.conversationId}&to_user=${this.username}`,
                         { read: true },
                         { params: { format: 'json' } }
                     );
@@ -164,7 +164,7 @@ export default {
 
             try {
                 const response = await axios.post(
-                    `https://api.mybustimes.cc/api/messages/`,
+                    `https://https://www.mybustimes.cc/api/messages/`,
                     {
                         conversation_id: conversationId,
                         message: messageText,

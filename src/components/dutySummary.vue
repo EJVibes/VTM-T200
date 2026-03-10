@@ -18,7 +18,7 @@
           <p>{{ formatSaleTime(trip.saleTime) }}</p>
           <p>{{ trip.route_number }}</p>
           <p>{{ trip.ticket_name }}</p>
-          <p>£{{ trip.ticket_price.toFixed(2) }}</p>
+          <p>£{{ trip.ticket_price }}</p>
           <p>{{ trip.soldAt }}</p>
         </div>
       </div>

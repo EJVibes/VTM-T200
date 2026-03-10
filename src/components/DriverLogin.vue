@@ -1,82 +1,106 @@
 <template>
     <div class="login-container">
         <div class="login-form">
-            <input type="text" v-model="code" placeholder="Enter username" class="username-input" />
+            <h2 id="login-title">Driver ID</h2>
+            <input :value="step === 1 ? userId : code" @input="onInput($event.target.value)"
+                :placeholder="step === 1 ? 'Enter User ID' : 'Enter Login Code'" class="username-input" />
             <div class="button-grid">
-                <button class=".buttonKey" v-for="button in buttons" :key="button" @click="handleButtonClick(button)">
+                <button class="buttonKey" v-for="button in buttons" :key="button" @click="handleButtonClick(button)">
                     {{ button }}
                 </button>
-                <a href="https://www.mybustimes.cc/BusTimes/gen_mbtt_code.php" target="_blank">Get Login Code</a>
+                <a href="https://www.mybustimes.cc/u/TicketerCode" target="_blank">
+                    Get Login Code
+                </a>
             </div>
         </div>
     </div>
-    <div>
-        <!--<p>Username: {{ username }}</p>-->
-    </div>
 </template>
+
 <script>
 import axios from 'axios';
 
-
 export default {
     name: 'DriverLogin',
-
     data() {
         return {
-            username: '',
-            code: '',  // The code to be submitted
+            step: 1, // 1: entering ID, 2: entering code
+            userId: '',
+            code: '',
             buttons: ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'C', '0', 'OK'],
         };
     },
     methods: {
-        playSound() {
-            const audio = new Audio(require('@/assets/Audio/Logon.wav'));
+        onInput(value) {
+            if (this.step === 1) {
+                this.userId = value;
+            } else {
+                this.code = value;
+            }
+        },
+        playSound(name) {
+            const audio = new Audio(require(`@/assets/Audio/${name}.wav`));
             audio.play();
         },
         async handleButtonClick(button) {
             if (button === 'C') {
-                this.code = ''; // Clear the input field
-            } else if (button === 'OK') {
-                if (this.code) {
-                    try {
-                        // Make an API request with the submitted code
-                        const response = await axios.get('https://api.mybustimes.cc/api/users/', {
-                            params: {
-                                code: this.code,
-                                email: '',
-                                expiry_datetime: '',
-                                format: 'json',
-                                id: '',
-                                name: '',
-                                pin: '',
-                                username: '',
-                            },
-                        });
-                        //console.log(response);  
-                        // Set the username from the API response
-                        const username = response.data.results[0].username || 'Username not found';
-                        localStorage.setItem('username', username);
-                        console.log('Username saved to local storage:', username);
-                        this.redirect();
-                    } catch (error) {
-                        console.error('API request failed:', error);
-                        const audio = new Audio(require('@/assets/Audio/Ticket decline.wav'));
-                        audio.play();
-                        //this.username = 'Error fetching username';
+                if (this.step === 1) this.userId = '';
+                else this.code = '';
+                return;
+            }
+
+            if (button === 'OK') {
+                if (this.step === 1) {
+                    console.log('User ID:', this.userId);
+                    document.getElementById('login-title').innerText = 'Pass Code';
+                    if (this.userId.trim()) {
+                        this.step = 2;
+                    } else {
+                        alert('Please enter your User ID');
                     }
-                } else {
-                    alert('Please enter a code');
+                } else if (this.step === 2) {
+                    if (this.code.trim()) {
+                        try {
+                            const response = await axios.post('https://www.mybustimes.cc/api/user/', {
+                                user_id: this.userId,
+                                code: this.code,
+                            }, {
+                                headers: { 'Content-Type': 'application/json' }
+                            });
+
+                            console.log(response);
+
+                            let session_key = response.data.session_key;
+
+                            const username = response.data.username || 'Unknown';
+                            localStorage.setItem('username', username);
+                            localStorage.setItem('user_id', this.userId);
+                            localStorage.setItem('session_key', session_key)
+                            this.redirect();
+
+                        } catch (error) {
+                            console.error('Login failed:', error);
+                            this.playSound('Ticket decline');
+                            alert('Invalid login. Please try again.');
+                            this.code = '';
+                            this.step = 1; // back to ID entry
+                        }
+                    } else {
+                        alert('Please enter your login code');
+                    }
                 }
             } else {
-                this.code += button; // Append the button value to the input
+                if (this.step === 1) {
+                    this.userId += button;
+                } else {
+                    this.code += button;
+                }
             }
         },
         redirect() {
-            this.playSound();
+            this.playSound('Logon');
             setTimeout(() => {
-                console.log('Redirecting...');
                 this.$router.push({ path: '/LoadUserData' });
-            }, 2000);
+            }, 1500);
         },
     },
 };
@@ -91,7 +115,6 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 0;
 }
 
 .login-form {
@@ -117,18 +140,11 @@ export default {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
-    position: relative;
-    bottom: 14vh;
-    width: 100%;
-    top: 5px;
     max-width: 500px;
 }
 
 .buttonKey {
     text-align: center;
-    width: 100%;
-    height: 100%;
-    overflow: hidden;
     font-size: 16px;
     background-color: #004ab9;
     color: white;
