@@ -43,7 +43,7 @@ export default {
             paxSeated: parseInt(localStorage.getItem("paxSeated")) || 0,
             paxStanding: parseInt(localStorage.getItem("paxStanding")) || 0,
             paxTotal: parseInt(localStorage.getItem("paxTotal")) || 0,
-            colours: ["#ff5453", "#ffdc53", "#2fdb42"], // Red, Yellow, Green
+            colours: ["#D03D3A", "#FFB210", "#247B05"], // Red, Yellow, Green
         };
     },
     mounted() {

@@ -29,12 +29,12 @@ export default {
 }
 
 button {
-    background: #004ab9;
+    background: #00009C;
     color: white;
     border: 0;
 }
 
 button:hover{
-    background: #003c97;
+    background: #000082;
 }
 </style>

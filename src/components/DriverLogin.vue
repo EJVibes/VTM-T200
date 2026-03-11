@@ -146,7 +146,7 @@ export default {
 .buttonKey {
     text-align: center;
     font-size: 16px;
-    background-color: #004ab9;
+    background-color: #00009C;
     color: white;
     border: none;
     border-radius: 4px;
@@ -155,6 +155,6 @@ export default {
 }
 
 .buttonKey:hover {
-    background-color: #003c97;
+    background-color: #000082;
 }
 </style>

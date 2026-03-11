@@ -33,14 +33,14 @@ body {
 }
 
 button {
-    background: #004ab9;
+    background: #00009C;
     color: white;
     border: 0;
     touch-action: manipulation;
 }
 
 button:hover{
-    background: #003c97;
+    background: #000082;
     touch-action: manipulation;
 }
 </style>

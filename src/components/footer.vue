@@ -444,7 +444,7 @@ export default {
 }
 
 .stopBanner {
-  background-color: #ca1a1a;
+  background-color: #D03D3A;
   position: fixed;
   top: 0;
   left: 0;
@@ -553,7 +553,7 @@ export default {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: #fff77a;
+  background: #FFB210;
   padding: 5%;
   text-align: center;
   font-size: 7.5vw;

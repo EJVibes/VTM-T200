@@ -59,7 +59,7 @@ export default {
 }
 
 .setup button {
-    border: 5px solid #004ab9;
+    border: 5px solid #00009C;
     width: 80%;
     font-size: 250%;
 }
