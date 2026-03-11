@@ -1,6 +1,7 @@
 const { defineConfig } = require('@vue/cli-service');
 
 module.exports = defineConfig({
+  lintOnSave: false,
   pwa: {
     name: 'MyTicketer',
     themeColor: '#FFFFFF',
@@ -9,10 +10,9 @@ module.exports = defineConfig({
       background_color: '#FFFFFF',
     },
     workboxOptions: {
-      cacheName: 'my-ticket-v2.0.33',
-      // You can define custom cache names here
-      skipWaiting: true, // Skip waiting to activate the new service worker immediately
-      clientsClaim: true, // Ensure the service worker controls all clients as soon as possible
+      cacheId: 'my-ticket-v2.0.33',
+      skipWaiting: true,
+      clientsClaim: true,
       runtimeCaching: [
         {
           urlPattern: /\.css$/,

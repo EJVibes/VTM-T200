@@ -34,8 +34,20 @@ To build and run the application in a production environment, follow these steps
     npm run build
     ```
 
-2. Start the application using **pm2** (for process management):
+2. Start the production server:
 
     ```bash
-    pm2 start npm --name "my-ticketer" -- run serve --watch -- --port=5000 --host=0.0.0.0 --output ~/.pm2/logs/my-ticketer-out.log --error ~/.pm2/logs/my-ticketer-error.log
+    PORT=3000 npm run start
     ```
+
+### Railway Deployment
+
+Railway can use the built-in scripts in [package.json](package.json):
+
+```bash
+npm install
+npm run build
+npm run start
+```
+
+The `start` script serves the compiled `dist` directory on Railway's `PORT` environment variable.
